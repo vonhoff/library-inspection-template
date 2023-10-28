@@ -1,8 +1,9 @@
-#include <stdlib.h>
-#include "library.h"
 #include "internal.h"
+#include "library.h"
+#include <stdlib.h>
 
-point_t *point_create (uint32_t x, uint32_t y)
+point_t *
+point_create (uint32_t x, uint32_t y)
 {
   point_t *point = malloc (sizeof (struct point));
   if (point != NULL)
@@ -14,7 +15,8 @@ point_t *point_create (uint32_t x, uint32_t y)
   return point;
 }
 
-bool point_destroy (point_t *point)
+bool
+point_destroy (point_t *point)
 {
   bool result = false;
   if (point != NULL)
@@ -26,7 +28,8 @@ bool point_destroy (point_t *point)
   return result;
 }
 
-uint32_t point_get_x (point_t *point)
+uint32_t
+point_get_x (const point_t *point)
 {
   uint32_t result = 0U;
   if (point != NULL)
@@ -37,7 +40,8 @@ uint32_t point_get_x (point_t *point)
   return result;
 }
 
-uint32_t point_get_y (point_t *point)
+uint32_t
+point_get_y (const point_t *point)
 {
   uint32_t result = 0U;
   if (point != NULL)

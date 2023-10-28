@@ -3,19 +3,22 @@
 
 #include <stdint.h>
 
-struct point {
+struct point
+{
   uint32_t x;
   uint32_t y;
 };
 
-struct rectangle {
+struct rectangle
+{
   uint32_t x;
   uint32_t y;
   uint32_t width;
   uint32_t height;
 };
 
-struct circle {
+struct circle
+{
   uint32_t x;
   uint32_t y;
   uint32_t radius;

@@ -1,8 +1,9 @@
-#include <stdlib.h>
-#include "library.h"
 #include "internal.h"
+#include "library.h"
+#include <stdlib.h>
 
-rectangle_t *rectangle_create (uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+rectangle_t *
+rectangle_create (uint32_t x, uint32_t y, uint32_t width, uint32_t height)
 {
   rectangle_t *rectangle = malloc (sizeof (struct rectangle));
   if (rectangle != NULL)
@@ -16,7 +17,8 @@ rectangle_t *rectangle_create (uint32_t x, uint32_t y, uint32_t width, uint32_t 
   return rectangle;
 }
 
-bool rectangle_destroy (rectangle_t *rectangle)
+bool
+rectangle_destroy (rectangle_t *rectangle)
 {
   bool result = false;
   if (rectangle != NULL)
@@ -28,7 +30,8 @@ bool rectangle_destroy (rectangle_t *rectangle)
   return result;
 }
 
-uint32_t rectangle_get_x (const rectangle_t *rectangle)
+uint32_t
+rectangle_get_x (const rectangle_t *rectangle)
 {
   uint32_t result = 0U;
   if (rectangle != NULL)
@@ -39,7 +42,8 @@ uint32_t rectangle_get_x (const rectangle_t *rectangle)
   return result;
 }
 
-uint32_t rectangle_get_y (const rectangle_t *rectangle)
+uint32_t
+rectangle_get_y (const rectangle_t *rectangle)
 {
   uint32_t result = 0U;
   if (rectangle != NULL)
@@ -50,7 +54,8 @@ uint32_t rectangle_get_y (const rectangle_t *rectangle)
   return result;
 }
 
-uint32_t rectangle_get_width (const rectangle_t *rectangle)
+uint32_t
+rectangle_get_width (const rectangle_t *rectangle)
 {
   uint32_t result = 0U;
   if (rectangle != NULL)
@@ -61,7 +66,8 @@ uint32_t rectangle_get_width (const rectangle_t *rectangle)
   return result;
 }
 
-uint32_t rectangle_get_height (const rectangle_t *rectangle)
+uint32_t
+rectangle_get_height (const rectangle_t *rectangle)
 {
   uint32_t result = 0U;
   if (rectangle != NULL)
