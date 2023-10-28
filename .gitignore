@@ -1,0 +1,13 @@
+# macOS specific files
+.DS_Store
+
+# CLion project files
+.cmake/
+.idea/
+cmake-build-*/
+
+# Build output directories
+bin/
+
+# Vendor directories
+vendor/
