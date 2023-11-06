@@ -9,25 +9,24 @@
  * coordinates and dimensions based on the provided values. The caller is responsible
  * for freeing the memory allocated by this function when it is no longer needed.
  *
- * @param x      The x-coordinate of the rectangle.
- * @param y      The y-coordinate of the rectangle.
- * @param width  The width of the rectangle.
- * @param height The height of the rectangle.
+ * @param x The x-coordinate of the rectangle.
+ * @param y The y-coordinate of the rectangle.
+ * @param w The width of the rectangle.
+ * @param h The height of the rectangle.
  *
  * @return A pointer to the newly created rectangle if allocation succeeds, or NULL
  *         if memory allocation fails.
  */
 rectangle_t *
-rectangle_create (uint32_t x, uint32_t y,
-                  uint32_t width, uint32_t height)
+rectangle_create (uint32_t x, uint32_t y, uint32_t w, uint32_t h)
 {
   rectangle_t *rectangle = malloc (sizeof (struct rectangle));
   if (rectangle != NULL)
     {
       rectangle->x = x;
       rectangle->y = y;
-      rectangle->width = width;
-      rectangle->height = height;
+      rectangle->width = w;
+      rectangle->height = h;
     }
 
   return rectangle;

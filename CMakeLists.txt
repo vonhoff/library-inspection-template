@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.25)
 project(Library C)
 
 # Set architecture-specific output directory
@@ -9,8 +9,8 @@ else ()
 endif ()
 set(OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/$<CONFIGURATION>-${ARCHITECTURE}/${PROJECT_NAME}")
 
-# Enable position-independent code
-add_compile_options(-fPIC)
+# Enable position-independent code with warnings
+add_compile_options(-fPIC -Wall -Wextra -Wpedantic)
 
 # Set optimization flags for Release builds
 if (CMAKE_BUILD_TYPE MATCHES Release)

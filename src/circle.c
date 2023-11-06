@@ -1,7 +1,6 @@
-#include <stdlib.h>
-
 #include "internal.h"
 #include "library.h"
+#include <stdlib.h>
 
 /**
  * @brief Create a new circle with the specified center coordinates and radius.
@@ -18,13 +17,16 @@
  * @return A pointer to the newly created circle if allocation succeeds, or NULL
  *         if memory allocation fails.
  */
-circle_t* circle_create(uint32_t x, uint32_t y, uint32_t radius) {
-  circle_t* circle = malloc(sizeof(struct circle));
-  if (circle != NULL) {
-    circle->x = x;
-    circle->y = y;
-    circle->radius = radius;
-  }
+circle_t *
+circle_create (uint32_t x, uint32_t y, uint32_t radius)
+{
+  circle_t *circle = malloc (sizeof (struct circle));
+  if (circle != NULL)
+    {
+      circle->x = x;
+      circle->y = y;
+      circle->radius = radius;
+    }
 
   return circle;
 }
@@ -40,12 +42,15 @@ circle_t* circle_create(uint32_t x, uint32_t y, uint32_t radius) {
  * @return true if the circle was successfully destroyed, false if the input
  * circle pointer is NULL.
  */
-bool circle_destroy(circle_t* circle) {
+bool
+circle_destroy (circle_t *circle)
+{
   bool result = false;
-  if (circle != NULL) {
-    free(circle);
-    result = true;
-  }
+  if (circle != NULL)
+    {
+      free (circle);
+      result = true;
+    }
 
   return result;
 }
@@ -61,11 +66,14 @@ bool circle_destroy(circle_t* circle) {
  * @return The x-coordinate of the center of the circle, or 0 if the input
  * circle pointer is NULL.
  */
-uint32_t circle_get_x(const circle_t* circle) {
+uint32_t
+circle_get_x (const circle_t *circle)
+{
   uint32_t result = 0U;
-  if (circle != NULL) {
-    result = circle->x;
-  }
+  if (circle != NULL)
+    {
+      result = circle->x;
+    }
 
   return result;
 }
@@ -81,11 +89,14 @@ uint32_t circle_get_x(const circle_t* circle) {
  * @return The y-coordinate of the center of the circle, or 0 if the input
  * circle pointer is NULL.
  */
-uint32_t circle_get_y(const circle_t* circle) {
+uint32_t
+circle_get_y (const circle_t *circle)
+{
   uint32_t result = 0U;
-  if (circle != NULL) {
-    result = circle->y;
-  }
+  if (circle != NULL)
+    {
+      result = circle->y;
+    }
 
   return result;
 }
@@ -100,11 +111,14 @@ uint32_t circle_get_y(const circle_t* circle) {
  *
  * @return The radius of the circle, or 0 if the input circle pointer is NULL.
  */
-uint32_t circle_get_radius(const circle_t* circle) {
+uint32_t
+circle_get_radius (const circle_t *circle)
+{
   uint32_t result = 0U;
-  if (circle != NULL) {
-    result = circle->radius;
-  }
+  if (circle != NULL)
+    {
+      result = circle->radius;
+    }
 
   return result;
 }
