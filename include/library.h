@@ -21,55 +21,11 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-/* The following are for purposes of demonstration and testing. */
-
 typedef struct point point_t;
-typedef struct rectangle rectangle_t;
-typedef struct circle circle_t;
-typedef struct sphere sphere_t;
-typedef struct triangle triangle_t;
-// typedef struct square square_t;
 
 API point_t *point_create (uint32_t x, uint32_t y);
 API bool point_destroy (point_t *point);
 API uint32_t point_get_x (const point_t *point);
 API uint32_t point_get_y (const point_t *point);
-
-API rectangle_t *rectangle_create (uint32_t x, uint32_t y, uint32_t width, uint32_t height);
-API bool rectangle_destroy (rectangle_t *rectangle);
-API uint32_t rectangle_get_x (const rectangle_t *rectangle);
-API uint32_t rectangle_get_y (const rectangle_t *rectangle);
-API uint32_t rectangle_get_width (const rectangle_t *rectangle);
-API uint32_t rectangle_get_height (const rectangle_t *rectangle);
-
-API circle_t *circle_create (uint32_t x, uint32_t y, uint32_t radius);
-API bool circle_destroy (circle_t *circle);
-API uint32_t circle_get_x (const circle_t *circle);
-API uint32_t circle_get_y (const circle_t *circle);
-API uint32_t circle_get_radius (const circle_t *circle);
-
-API sphere_t *sphere_create (uint32_t x, uint32_t y, uint32_t z, uint32_t radius);
-API bool sphere_destroy (sphere_t *sphere);
-API uint32_t sphere_get_x (const sphere_t *sphere);
-API uint32_t sphere_get_y (const sphere_t *sphere);
-API uint32_t sphere_get_z (const sphere_t *sphere);
-API uint32_t sphere_get_radius (const sphere_t *sphere);
-
-API triangle_t *triangle_create (uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2, uint32_t x3, uint32_t y3);
-API bool triangle_destroy (triangle_t *triangle);
-API uint32_t triangle_get_x1 (const triangle_t *triangle);
-API uint32_t triangle_get_y1 (const triangle_t *triangle);
-API uint32_t triangle_get_x2 (const triangle_t *triangle);
-API uint32_t triangle_get_y2 (const triangle_t *triangle);
-API uint32_t triangle_get_x3 (const triangle_t *triangle);
-API uint32_t triangle_get_y3 (const triangle_t *triangle);
-
-/*
-API square_t *square_create (uint32_t x, uint32_t y, uint32_t side_length);
-API bool square_destroy (square_t *square);
-API uint32_t square_get_x (const square_t *square);
-API uint32_t square_get_y (const square_t *square);
-API uint32_t square_get_side_length (const square_t *square);
-*/
 
 #endif

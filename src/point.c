@@ -15,16 +15,17 @@
  * @return A pointer to the newly created point if allocation succeeds, or NULL if
  * memory allocation fails.
  */
-point_t *point_create(uint32_t x, uint32_t y)
+point_t *
+point_create (uint32_t x, uint32_t y)
 {
-    point_t *point = malloc(sizeof(struct point));
-    if (point != NULL)
+  point_t *point = malloc (sizeof (struct point));
+  if (point != NULL)
     {
-        point->x = x;
-        point->y = y;
+      point->x = x;
+      point->y = y;
     }
 
-    return point;
+  return point;
 }
 
 /**
@@ -38,16 +39,17 @@ point_t *point_create(uint32_t x, uint32_t y)
  * @return true if the point was successfully destroyed, false if the input point
  * pointer is NULL.
  */
-bool point_destroy(point_t *point)
+bool
+point_destroy (point_t *point)
 {
-    bool result = false;
-    if (point != NULL)
+  bool result = false;
+  if (point != NULL)
     {
-        free(point);
-        result = true;
+      free (point);
+      result = true;
     }
 
-    return result;
+  return result;
 }
 
 /**
@@ -60,15 +62,16 @@ bool point_destroy(point_t *point)
  *
  * @return The x-coordinate of the point, or 0 if the input point pointer is NULL.
  */
-uint32_t point_get_x(const point_t *point)
+uint32_t
+point_get_x (const point_t *point)
 {
-    uint32_t result = 0U;
-    if (point != NULL)
+  uint32_t result = 0U;
+  if (point != NULL)
     {
-        result = point->x;
+      result = point->x;
     }
 
-    return result;
+  return result;
 }
 
 /**
@@ -81,13 +84,14 @@ uint32_t point_get_x(const point_t *point)
  *
  * @return The y-coordinate of the point, or 0 if the input point pointer is NULL.
  */
-uint32_t point_get_y(const point_t *point)
+uint32_t
+point_get_y (const point_t *point)
 {
-    uint32_t result = 0U;
-    if (point != NULL)
+  uint32_t result = 0U;
+  if (point != NULL)
     {
-        result = point->y;
+      result = point->y;
     }
 
-    return result;
+  return result;
 }
