@@ -169,7 +169,7 @@ CLOVE_SUITE_SETUP_ONCE ()
         }
 
       /* Check if the prototype has any coverage at all */
-      if (decl->coverages_count == 0)
+      if ((decl->coverages_count == 0) && (decl->definition_line_number > 0))
         {
           g_print_uncovered = true;
         }
