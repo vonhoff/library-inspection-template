@@ -29,8 +29,8 @@ The root directory contains three main folders:
 
 3. **Tests folder:**
     - Contains its own CMakeLists file, designed for inclusion rather than loading as a standalone project.
-    - Dynamically fetches the latest version of `clove-unit.h` and places it in the `tests/vendor` folder, which is explicitly ignored by the
-      in the `.gitignore` file.
+    - Dynamically fetches the latest version of `clove-unit.h` and places it in the `tests/vendor` folder, which is explicitly ignored by
+      the `.gitignore` file.
 
 ## License
 
