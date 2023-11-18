@@ -6,11 +6,12 @@ with [CLove-Unit](https://github.com/fdefelici/clove-unit/).
 The inspection suite is built around the following rules that I have set up for my workflow:
 
 1. Every API must be covered, either by annotations or a dedicated clove unit test.
-2. Test names should reflect API function names. In cases of test variations, use double underscores <br/>
+2. Every test should be related to an API.
+3. Test names should reflect API function names. In cases of test variations, use double underscores <br/>
    (e.g. "point_create," "point_create__on_null").
-3. Test file names should mirror the corresponding implementation file names, ending with ".test.c" instead of ".c".
-4. Each API prototype declaration must have a corresponding implementation.
-5. Parameters in prototypes should match their definitions.
+4. Test file names should mirror the corresponding implementation file names, ending with ".test.c" instead of ".c".
+5. Each API prototype declaration must have a corresponding implementation.
+6. Parameters in prototypes should match their definitions.
 
 ## Screenshot
 
