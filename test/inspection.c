@@ -1,4 +1,4 @@
-#define CLOVE_SUITE_NAME _api_inspection
+#define CLOVE_SUITE_NAME _inspection
 #include "clove-unit.h"
 #include <ctype.h>
 #include <dirent.h>
@@ -23,7 +23,7 @@
 #define LIBRARY_PREFIX_API "API"
 #define LIBRARY_PATH_INCLUDE "include/library.h"
 #define LIBRARY_PATH_SRC "src"
-#define LIBRARY_PATH_TEST "tests/src"
+#define LIBRARY_PATH_TEST "test"
 #define LIBRARY_EXTENSION_SRC ".c"
 #define LIBRARY_EXTENSION_TEST ".test.c"
 
@@ -220,8 +220,8 @@ CLOVE_TEST (check_undefined)
           if (declaration->definition_line_number == 0)
             {
               int32_t name_count = printf (" - %s", declaration->function_name);
-              (void)printf (string_get_spacing_dots (name_count, dots_buffer));
-              (void)printf ("(%s:%04zu)\n", g_path_include_file, declaration->declaration_line_number);
+              (void)printf ("%s", string_get_spacing_dots (name_count, dots_buffer));
+              (void)printf ("(%s:%u)\n", g_path_include_file, declaration->declaration_line_number);
             }
         }
 
@@ -252,8 +252,8 @@ CLOVE_TEST (check_uncovered)
           if ((declaration->coverages_count == 0) && (declaration->definition_line_number > 0))
             {
               int32_t name_count = printf (" - %s", declaration->function_name);
-              (void)printf (string_get_spacing_dots (name_count, dots_buffer));
-              (void)printf ("(%s:%04zu) => Expected in: %s\n", declaration->source_path, declaration->definition_line_number,
+              (void)printf ("%s", string_get_spacing_dots (name_count, dots_buffer));
+              (void)printf ("(%s:%u) => Expected in: %s\n", declaration->source_path, declaration->definition_line_number,
                             declaration->expected_test_path);
             }
         }
@@ -326,8 +326,8 @@ CLOVE_TEST (check_test_mismatches)
                   && (strcmp (declaration->coverages[j].test_path, declaration->expected_test_path) != 0))
                 {
                   int32_t name_count = printf (" - %s", declaration->function_name);
-                  (void)printf (string_get_spacing_dots (name_count, dots_buffer));
-                  (void)printf ("(%s:%04zu) => Expected in: %s\n", declaration->coverages[j].test_path, declaration->coverages[j].line,
+                  (void)printf ("%s", string_get_spacing_dots (name_count, dots_buffer));
+                  (void)printf ("(%s:%u) => Expected in: %s\n", declaration->coverages[j].test_path, declaration->coverages[j].line,
                                 declaration->expected_test_path);
                 }
             }
@@ -361,8 +361,8 @@ CLOVE_TEST (check_prototype_mismatches)
           if ((declaration->definition_line_number > 0) && (declaration->is_prototype_match == false))
             {
               int32_t name_count = printf (" - %s", declaration->function_name);
-              (void)printf (string_get_spacing_dots (name_count, dots_buffer));
-              (void)printf ("(%s:%04zu)\n", declaration->source_path, declaration->definition_line_number);
+              (void)printf ("%s", string_get_spacing_dots (name_count, dots_buffer));
+              (void)printf ("(%s:%u)\n", declaration->source_path, declaration->definition_line_number);
             }
         }
 
