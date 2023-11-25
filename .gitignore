@@ -5,6 +5,3 @@
 .cmake/
 .idea/
 cmake-build-*/
-
-# Build output directory
-bin/
