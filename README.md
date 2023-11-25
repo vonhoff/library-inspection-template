@@ -1,17 +1,31 @@
-# CLove-Unit C Library Template
+# CLove-Unit C Library Template With Embedded Inspection
 
-This template is equipped with a set of checks for unit testing and consistency checking. It is designed to integrate seamlessly
-with [CLove-Unit](https://github.com/fdefelici/clove-unit/).
+This template serves as a robust foundation for C libraries, incorporating a comprehensive set of checks for unit
+testing and consistency. Specifically designed for seamless integration
+with [CLove-Unit](https://github.com/fdefelici/clove-unit/), this template adheres to a set of rules to enhance the
+reliability and maintainability of your project.
 
-The inspection suite is built around the following rules that I have set up for my workflow:
+## Inspection Rules
 
-1. Every API must be covered, either by annotations or a dedicated clove unit test.
-2. Every test should be related to an API.
-3. Test names should reflect API function names. In cases of test variations, use double underscores <br/>
-   (e.g. "point_create," "point_create__on_null").
-4. Test file names should mirror the corresponding implementation file names, ending with ".test.c" instead of ".c".
-5. Each API prototype declaration must have a corresponding implementation.
-6. Parameters in prototypes should match their definitions.
+1. **Full API Coverage:**
+    - Ensure every API is covered, either through annotations or a dedicated Clove Unit test.
+
+2. **Association of Tests with APIs:**
+    - Every test should be directly related to a specific API.
+
+3. **Consistent Test Naming:**
+    - Adopt a consistent naming convention for tests, mirroring API function names. In cases of test variations, employ
+      double underscores (e.g., "point_create," "point_create__on_null").
+
+4. **Organized Test Files:**
+    - Test file names should replicate the corresponding implementation file names, with the addition of ".test.c"
+      instead of ".c".
+
+5. **Matching Prototypes and Implementations:**
+    - Ensure each API prototype declaration has a corresponding implementation.
+
+6. **Parameter Consistency:**
+    - Ensure that parameters in prototypes match their definitions exactly.
 
 ## Screenshot
 
@@ -19,25 +33,23 @@ The inspection suite is built around the following rules that I have set up for 
 
 ## Project Structure
 
-The root directory contains three main folders:
+The root directory is organized into three key folders:
 
-1. **Include folder:**
-    - Contains a single header file that provides the API for the library and defines interfaces for external use.
+1. **Include Folder:**
+    - Hosts a single header file providing the API for the library, defining interfaces for external use.
 
-2. **Source folder:**
-    - Contains the essential source code files needed to implement the functionality of the library.
+2. **Source Folder:**
+    - Contains essential source code files necessary for implementing the library's functionality.
 
-3. **Tests folder:**
-    - Contains its own CMakeLists file, designed for inclusion rather than loading as a standalone project.
-    - Dynamically fetches the latest version of `clove-unit.h` and places it in the `tests/vendor` folder, which is explicitly ignored by
-      the `.gitignore` file.
+3. **Tests Folder:**
+    - Encompasses CLove-Unit tests featuring an embedded API inspection suite.
 
 ## License
 
-This template is provided under the [MIT License](LICENSE). You are free to use it, modify it, and distribute it as per your project's needs. Feel
-free to replace the license with one that aligns better with your project requirements.
+This template is distributed under the [MIT License](LICENSE), which grants you the freedom to use, modify, and
+redistribute it according to your project's needs. Feel free to replace the license with one that better suits your
+project's needs.
 
-## Contribute
+## Contribution
 
-Contributions are welcome! <br/>
-If you have ideas for improving this template, feel free to create issues or submit pull requests.
+Contributions are welcome! If you have ideas for improving this template, please create issues or submit pull requests.
