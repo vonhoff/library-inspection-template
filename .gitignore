@@ -5,9 +5,3 @@
 .cmake/
 .idea/
 cmake-build-*/
-
-# Build output directories
-bin/
-
-# Vendor directories
-vendor/
