@@ -10,12 +10,12 @@
 
 /* Max array lengths */
 #define MAX_PARAMETERS 8
-#define MAX_PROTOTYPES 512
-#define MAX_TEST_BRANCHES 4
+#define MAX_PROTOTYPES 128
+#define MAX_TEST_BRANCHES 16
 #define MAX_TESTS (MAX_PROTOTYPES * MAX_TEST_BRANCHES)
 
 /* Max string lengths */
-#define LENGTH_LINE 256U
+#define LENGTH_LINE 512U
 #define LENGTH_FUNCTION_NAME 128U
 #define LENGTH_PARAMETER_NAME 128U
 
@@ -629,11 +629,20 @@ line_get_definition (const char *line, char *out, bool *is_multiple, const char 
       /* Continue capturing lines until the end of the out */
       (void)strcat (out, line);
 
-      /* Check for the end of a multi-line out */
-      if (strchr (out, CHAR_IMPLEMENTATION_START) != NULL)
+      /* If it contains a semicolon, we should stop immediately. */
+      if (strchr (line, CHAR_PROTOTYPE_END) != NULL)
         {
           *is_multiple = false;
-          result = true;
+          result = false;
+        }
+      else
+        {
+          /* Check for the end of a multi-line out */
+          if (strchr (out, CHAR_IMPLEMENTATION_START) != NULL)
+            {
+              *is_multiple = false;
+              result = true;
+            }
         }
     }
   else
