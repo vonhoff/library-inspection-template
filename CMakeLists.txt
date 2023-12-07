@@ -53,6 +53,3 @@ add_executable(${TEST_PROJECT_NAME} ${TEST_HEADERS} ${TEST_SOURCES})
 target_compile_definitions(${TEST_PROJECT_NAME} PRIVATE PROJECT_ROOT="${CMAKE_SOURCE_DIR}")
 target_include_directories(${TEST_PROJECT_NAME} PRIVATE include)
 target_link_libraries(${TEST_PROJECT_NAME} PRIVATE ${PROJECT_NAME} clove-unit::clove-unit)
-
-# Disable all warnings for the test project.
-target_compile_options(${TEST_PROJECT_NAME} PRIVATE -w)

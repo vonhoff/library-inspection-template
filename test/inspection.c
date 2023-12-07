@@ -115,13 +115,13 @@ static bool line_is_comment (const char *line, bool *is_block);
 
 /* Global Declarations Management */
 static bool g_declarations_append (const char *line, uint32_t line_number);
-static bool g_declarations_update_tests (const FILE *test_file, const char *test_path);
-static void g_declarations_update_definitions (const FILE *src_file, const char *src_path, const char *expected_test_path);
+static bool g_declarations_update_tests (FILE *test_file, const char *test_path);
+static void g_declarations_update_definitions (FILE *src_file, const char *src_path, const char *expected_test_path);
 
 /* Global Invalid Test Management */
 static bool g_tests_append (const char *test_path, uint32_t line_number);
 static void g_tests_remove (uint32_t index);
-static bool g_tests_update_data (const FILE *test_file, const char *test_path);
+static bool g_tests_update_data (FILE *test_file, const char *test_path);
 static void g_tests_filter_defined (void);
 
 /* Declaration Management */
@@ -160,15 +160,12 @@ CLOVE_SUITE_SETUP_ONCE ()
       declaration = &g_declarations[i];
 
       /* Check for test definition mismatches, excluding annotations */
-      if (g_print_test_mismatches == false)
+      for (uint32_t j = 0; (j < declaration->coverages_count) && (g_print_test_mismatches == false); ++j)
         {
-          for (uint32_t j = 0; (j < declaration->coverages_count) && (g_print_test_mismatches == false); ++j)
+          if ((declaration->coverages[j].is_annotation == false)
+              && (strcmp (declaration->coverages[j].test_path, declaration->expected_test_path) != 0))
             {
-              if ((declaration->coverages[j].is_annotation == false)
-                  && (strcmp (declaration->coverages[j].test_path, declaration->expected_test_path) != 0))
-                {
-                  g_print_test_mismatches = true;
-                }
+              g_print_test_mismatches = true;
             }
         }
 
@@ -924,7 +921,7 @@ g_declarations_append (const char *line, uint32_t line_number)
  * @return true if the test coverage information is successfully updated, false otherwise.
  */
 static bool
-g_declarations_update_tests (const FILE *test_file, const char *test_path)
+g_declarations_update_tests (FILE *test_file, const char *test_path)
 {
   bool result = true;
 
@@ -987,7 +984,7 @@ g_declarations_update_tests (const FILE *test_file, const char *test_path)
  * @param extension_position The position of the source extension in path.
  */
 static void
-g_declarations_update_definitions (const FILE *src_file, const char *src_path, const char *expected_test_path)
+g_declarations_update_definitions (FILE *src_file, const char *src_path, const char *expected_test_path)
 {
   for (uint32_t i = 0; i < g_declarations_count; ++i)
     {
@@ -1086,7 +1083,7 @@ g_tests_remove (uint32_t index)
  * @return true if the test coverage information is successfully updated, false otherwise.
  */
 static bool
-g_tests_update_data (const FILE *test_file, const char *test_path)
+g_tests_update_data (FILE *test_file, const char *test_path)
 {
   bool result = true;
 
@@ -1283,7 +1280,7 @@ load_definitions (void)
 {
   bool result = true;
 
-  const DIR *source_directory = opendir (g_path_src_directory);
+  DIR *source_directory = opendir (g_path_src_directory);
   if (source_directory == NULL)
     {
       (void)fprintf (stderr, "Error: Unable to open source directory at '%s'\n", g_path_src_directory);
@@ -1292,7 +1289,7 @@ load_definitions (void)
   else
     {
       const struct dirent *entry = readdir (source_directory);
-      const FILE *src_file = NULL;
+      FILE *src_file = NULL;
 
       while (entry != NULL)
         {
@@ -1350,7 +1347,7 @@ load_tests (void)
 {
   bool result = true;
 
-  const DIR *test_directory = opendir (g_path_test_directory);
+  DIR *test_directory = opendir (g_path_test_directory);
   if (test_directory == NULL)
     {
       (void)fprintf (stderr, "Error: Unable to open test directory at '%s'\n", g_path_test_directory);
@@ -1359,7 +1356,7 @@ load_tests (void)
   else
     {
       const struct dirent *entry = readdir (test_directory);
-      const FILE *test_file = NULL;
+      FILE *test_file = NULL;
 
       while (result && (entry != NULL))
         {
