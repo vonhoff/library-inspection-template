@@ -649,14 +649,18 @@ line_get_definition (const char *line, char *out, bool *is_multiple, const char 
           /* Check for the start of a function out */
           (void)strcpy (out, line);
 
-          /* Check for the end of a single-line out */
-          if (strchr (line, CHAR_IMPLEMENTATION_START) != NULL)
+          /* If it contains a semicolon, we should stop immediately. */
+          if (strchr (line, CHAR_PROTOTYPE_END) == NULL)
             {
-              result = true;
-            }
-          else
-            {
-              *is_multiple = true;
+              /* Check for the end of a single-line out */
+              if (strchr (line, CHAR_IMPLEMENTATION_START) != NULL)
+                {
+                  result = true;
+                }
+              else
+                {
+                  *is_multiple = true;
+                }
             }
         }
     }
