@@ -98,6 +98,7 @@ static bool g_print_invalid_tests = false;
 /* Miscellaneous Utilities */
 static bool file_exists (const char *path);
 static bool char_is_word_boundary (char target);
+static bool char_is_word_boundary_alt (char target);
 
 /* String Utilities */
 static char *string_get_spacing_dots (int32_t length, char *buffer);
@@ -111,6 +112,7 @@ static bool line_get_definition (const char *line, char *out, bool *is_multiple,
 static bool line_get_function_test (const char *line, char *out, bool *is_multiple, const char *name);
 static bool line_get_function_name (const char *line, char *out);
 static bool line_find_word (const char *line, const char *word);
+static bool line_find_word_alt (const char *line, const char *word);
 static bool line_is_comment (const char *line, bool *is_block);
 
 /* Global Declarations Management */
@@ -421,6 +423,18 @@ char_is_word_boundary (char target)
 }
 
 /**
+ * Determines whether a given character is a word boundary.
+ *
+ * @param target The character to check for word boundary.
+ * @return true if the character is a word boundary, false otherwise.
+ */
+static bool
+char_is_word_boundary_alt (char target)
+{
+  return (isspace (target) != 0) || (target == '*');
+}
+
+/**
  * Generates a string of spacing dots based on the specified alignment requirements.
  *
  * @param length The length of the string.
@@ -644,7 +658,7 @@ line_get_definition (const char *line, char *out, bool *is_multiple, const char 
     }
   else
     {
-      if (line_find_word (line, name))
+      if (line_find_word_alt (line, name))
         {
           /* Check for the start of a function out */
           (void)strcpy (out, line);
@@ -806,6 +820,45 @@ line_find_word (const char *line, const char *word)
           const char *after = &line[i + word_len];
 
           if (((i == 0) || char_is_word_boundary (*before)) && (char_is_word_boundary (*after) || (strncmp (after, "__", 2) == 0)))
+            {
+              result = true;
+              break;
+            }
+        }
+    }
+
+  return result;
+}
+
+/**
+ * Finds a word in a given line, considering word boundaries.
+ *
+ * @param line A pointer to the null-terminated string representing the line to search.
+ * @param word A pointer to the null-terminated string representing the word to find.
+ * @return true if the word is found as a whole word in the word, false otherwise.
+ */
+static bool
+line_find_word_alt (const char *line, const char *word)
+{
+  bool result = false;
+
+  /* Get the length of the word and the line */
+  uint32_t word_len = (uint32_t)strlen (word);
+  uint32_t line_len = (uint32_t)strlen (line);
+
+  /* Calculate the maximum index to iterate */
+  uint32_t max_index = word_len > line_len ? 0 : (line_len - word_len);
+
+  /* Loop through the line string */
+  for (uint32_t i = 0; i <= max_index; ++i)
+    {
+      /* Check if the current substring matches the word */
+      if (strncmp (line + i, word, word_len) == 0)
+        {
+          const char *before = &line[i - 1];
+          const char *after = &line[i + word_len];
+
+          if (((i == 0) || char_is_word_boundary_alt (*before)) && (char_is_word_boundary (*after)))
             {
               result = true;
               break;
