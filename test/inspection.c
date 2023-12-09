@@ -858,7 +858,7 @@ line_find_word_alt (const char *line, const char *word)
           const char *before = &line[i - 1];
           const char *after = &line[i + word_len];
 
-          if (((i == 0) || char_is_word_boundary_alt (*before)) && (char_is_word_boundary (*after)))
+          if (((i == 0) || char_is_word_boundary_alt (*before)) && (char_is_word_boundary_alt (*after)))
             {
               result = true;
               break;
