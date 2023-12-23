@@ -10,8 +10,8 @@
 
 /* Max array lengths */
 #define MAX_PARAMETERS 8
-#define MAX_PROTOTYPES 128
-#define MAX_TEST_BRANCHES 16
+#define MAX_PROTOTYPES 512
+#define MAX_TEST_BRANCHES 8
 #define MAX_TESTS (MAX_PROTOTYPES * MAX_TEST_BRANCHES)
 
 /* Max string lengths */
@@ -52,7 +52,7 @@
  */
 typedef struct
 {
-  char test_path[FILENAME_MAX];
+  char test_path[256];
   uint32_t line;
   bool is_annotation;
 } coverage_t;
@@ -63,8 +63,8 @@ typedef struct
 typedef struct
 {
   char function_name[LENGTH_FUNCTION_NAME];
-  char source_path[FILENAME_MAX];
-  char expected_test_path[FILENAME_MAX];
+  char source_path[256];
+  char expected_test_path[256];
   char parameters[MAX_PARAMETERS][LENGTH_PARAMETER_NAME];
   coverage_t coverages[MAX_TEST_BRANCHES];
   uint32_t parameters_count;
@@ -76,12 +76,12 @@ typedef struct
   bool has_test_file;
 } declaration_t;
 
-static char g_path_include_file[FILENAME_MAX] = { 0 };
-static char g_path_src_directory[FILENAME_MAX] = { 0 };
-static char g_path_test_directory[FILENAME_MAX] = { 0 };
+static char g_path_include_file[256] = { 0 };
+static char g_path_src_directory[256] = { 0 };
+static char g_path_test_directory[256] = { 0 };
 
-static declaration_t g_declarations[MAX_PROTOTYPES] = { 0 };
-static uint32_t g_declarations_count = 0U;
+static declaration_t g_decl[MAX_PROTOTYPES] = { 0 };
+static uint32_t g_decl_count = 0U;
 
 static coverage_t g_tests[MAX_TESTS] = { 0 };
 static uint32_t g_tests_count = 0U;
@@ -116,9 +116,9 @@ static bool line_find_word_alt (const char *line, const char *word);
 static bool line_is_comment (const char *line, bool *is_block);
 
 /* Global Declarations Management */
-static bool g_declarations_append (const char *line, uint32_t line_number);
-static bool g_declarations_update_tests (FILE *test_file, const char *test_path);
-static void g_declarations_update_definitions (FILE *src_file, const char *src_path, const char *expected_test_path);
+static bool g_decl_append (const char *line, uint32_t line_number);
+static bool g_decl_update_tests (FILE *test_file, const char *test_path);
+static void g_decl_update_definitions (FILE *src_file, const char *src_path, const char *expected_test_path);
 
 /* Global Invalid Test Management */
 static bool g_tests_append (const char *test_path, uint32_t line_number);
@@ -157,9 +157,9 @@ CLOVE_SUITE_SETUP_ONCE ()
 
   /* Determine report statuses */
   const declaration_t *declaration = NULL;
-  for (uint32_t i = 0; i < g_declarations_count; ++i)
+  for (uint32_t i = 0; i < g_decl_count; ++i)
     {
-      declaration = &g_declarations[i];
+      declaration = &g_decl[i];
 
       /* Check for test definition mismatches, excluding annotations */
       for (uint32_t j = 0; (j < declaration->coverages_count) && (g_print_test_mismatches == false); ++j)
@@ -213,9 +213,9 @@ CLOVE_TEST (check_undefined)
       char dots_buffer[REPORT_ALIGNMENT_DOTS + 1] = { 0 };
       const declaration_t *declaration = NULL;
 
-      for (uint32_t i = 0; i < g_declarations_count; ++i)
+      for (uint32_t i = 0; i < g_decl_count; ++i)
         {
-          declaration = &g_declarations[i];
+          declaration = &g_decl[i];
           if (declaration->definition_line_number == 0)
             {
               int32_t name_count = printf (" - %s", declaration->function_name);
@@ -245,9 +245,9 @@ CLOVE_TEST (check_uncovered)
       char dots_buffer[REPORT_ALIGNMENT_DOTS + 1] = { 0 };
       const declaration_t *declaration = NULL;
 
-      for (uint32_t i = 0; i < g_declarations_count; ++i)
+      for (uint32_t i = 0; i < g_decl_count; ++i)
         {
-          declaration = &g_declarations[i];
+          declaration = &g_decl[i];
           if ((declaration->coverages_count == 0) && (declaration->definition_line_number > 0))
             {
               int32_t name_count = printf (" - %s", declaration->function_name);
@@ -278,16 +278,16 @@ CLOVE_TEST (check_missing_test_files)
       bool visited[MAX_PROTOTYPES] = { false };
       const declaration_t *declaration = NULL;
 
-      for (uint32_t i = 0; i < g_declarations_count; ++i)
+      for (uint32_t i = 0; i < g_decl_count; ++i)
         {
-          declaration = &g_declarations[i];
+          declaration = &g_decl[i];
           if (((declaration->coverages_count == 0) || (declaration->coverage_annotation_count < declaration->coverages_count))
               && (declaration->definition_line_number > 0) && (declaration->has_test_file == false) && (visited[i] == false))
             {
               (void)printf (" - %s\n", declaration->expected_test_path);
-              for (uint32_t j = i + 1U; j < g_declarations_count; ++j)
+              for (uint32_t j = i + 1U; j < g_decl_count; ++j)
                 {
-                  if (strcmp (declaration->expected_test_path, g_declarations[j].expected_test_path) == 0)
+                  if (strcmp (declaration->expected_test_path, g_decl[j].expected_test_path) == 0)
                     {
                       visited[j] = true;
                     }
@@ -316,9 +316,9 @@ CLOVE_TEST (check_test_mismatches)
       char dots_buffer[REPORT_ALIGNMENT_DOTS + 1] = { 0 };
       const declaration_t *declaration = NULL;
 
-      for (uint32_t i = 0; i < g_declarations_count; ++i)
+      for (uint32_t i = 0; i < g_decl_count; ++i)
         {
-          declaration = &g_declarations[i];
+          declaration = &g_decl[i];
           for (uint32_t j = 0; j < declaration->coverages_count; ++j)
             {
               if ((declaration->coverages[j].is_annotation == false)
@@ -353,9 +353,9 @@ CLOVE_TEST (check_prototype_mismatches)
       char dots_buffer[REPORT_ALIGNMENT_DOTS + 1] = { 0 };
       const declaration_t *declaration = NULL;
 
-      for (uint32_t i = 0; i < g_declarations_count; ++i)
+      for (uint32_t i = 0; i < g_decl_count; ++i)
         {
-          declaration = &g_declarations[i];
+          declaration = &g_decl[i];
 
           if ((declaration->definition_line_number > 0) && (declaration->is_prototype_match == false))
             {
@@ -945,20 +945,20 @@ line_is_comment (const char *line, bool *is_block)
  * @return true if the function prototype is successfully added, false otherwise.
  */
 static bool
-g_declarations_append (const char *line, uint32_t line_number)
+g_decl_append (const char *line, uint32_t line_number)
 {
   bool result = false;
 
   char signature[LENGTH_LINE] = { 0 };
   string_normalize_spaces (signature, line + strlen (LIBRARY_PREFIX_API));
 
-  if (g_declarations_count < MAX_PROTOTYPES)
+  if (g_decl_count < MAX_PROTOTYPES)
     {
-      declaration_t *prototype = &g_declarations[g_declarations_count];
+      declaration_t *prototype = &g_decl[g_decl_count];
       if (line_get_function_name (signature, prototype->function_name) && line_tokenize_parameters (signature, prototype))
         {
           prototype->declaration_line_number = line_number;
-          ++g_declarations_count;
+          ++g_decl_count;
           result = true;
         }
     }
@@ -978,13 +978,13 @@ g_declarations_append (const char *line, uint32_t line_number)
  * @return true if the test coverage information is successfully updated, false otherwise.
  */
 static bool
-g_declarations_update_tests (FILE *test_file, const char *test_path)
+g_decl_update_tests (FILE *test_file, const char *test_path)
 {
   bool result = true;
 
-  for (uint32_t i = 0; i < g_declarations_count; ++i)
+  for (uint32_t i = 0; i < g_decl_count; ++i)
     {
-      declaration_t *declaration = &g_declarations[i];
+      declaration_t *declaration = &g_decl[i];
 
       char annotation[LENGTH_LINE] = { 0 };
       (void)snprintf (annotation, LENGTH_LINE, FORMAT_TEST_ANNOTATION, declaration->function_name);
@@ -1041,11 +1041,11 @@ g_declarations_update_tests (FILE *test_file, const char *test_path)
  * @param extension_position The position of the source extension in path.
  */
 static void
-g_declarations_update_definitions (FILE *src_file, const char *src_path, const char *expected_test_path)
+g_decl_update_definitions (FILE *src_file, const char *src_path, const char *expected_test_path)
 {
-  for (uint32_t i = 0; i < g_declarations_count; ++i)
+  for (uint32_t i = 0; i < g_decl_count; ++i)
     {
-      declaration_t *declaration = &g_declarations[i];
+      declaration_t *declaration = &g_decl[i];
       if (declaration->definition_line_number > 0)
         {
           continue;
@@ -1070,7 +1070,7 @@ g_declarations_update_definitions (FILE *src_file, const char *src_path, const c
               declaration_update_validation (declaration, declaration_buffer);
               (void)strcpy (declaration->source_path, src_path);
               (void)strcpy (declaration->expected_test_path, expected_test_path);
-              declaration->has_test_file = file_exists (g_declarations[i].expected_test_path);
+              declaration->has_test_file = file_exists (g_decl[i].expected_test_path);
 
               break;
             }
@@ -1184,11 +1184,11 @@ static void
 g_tests_filter_defined (void)
 {
   const declaration_t *declaration = NULL;
-  for (uint32_t i = 0; i < g_declarations_count; ++i)
+  for (uint32_t i = 0; i < g_decl_count; ++i)
     {
-      declaration = &g_declarations[i];
+      declaration = &g_decl[i];
 
-      for (uint32_t j = 0; j < g_declarations[i].coverages_count; ++j)
+      for (uint32_t j = 0; j < g_decl[i].coverages_count; ++j)
         {
           for (uint32_t k = 0; k < g_tests_count; ++k)
             {
@@ -1214,7 +1214,7 @@ g_tests_filter_defined (void)
  * @param test_path Test path string.
  * @param line_number Line number where the test was executed.
  * @param is_annotation Marks the coverage as an annotation.
- * @return True if coverage added successfully, false if array is full.
+ * @return true if coverage added successfully, false if array is full.
  */
 static bool
 declaration_add_coverage (declaration_t *declaration, const char *test_path, uint32_t line_number, bool is_annotation)
@@ -1315,7 +1315,7 @@ load_prototypes (void)
           /* Check if the line is part of a function declaration */
           if (line_get_prototype (line_buffer, declaration_buffer, &in_multi_line))
             {
-              result = g_declarations_append (declaration_buffer, line_number);
+              result = g_decl_append (declaration_buffer, line_number);
             }
         }
 
@@ -1355,21 +1355,21 @@ load_definitions (void)
           if (extension_position != NULL)
             {
               /* Attempt to open source file */
-              char path_buffer[FILENAME_MAX] = { 0 };
+              char path_buffer[(256 * 2) + 1] = { 0 };
               (void)snprintf (path_buffer, sizeof (path_buffer), "%s/%s", g_path_src_directory, entry->d_name);
               src_file = fopen (path_buffer, "r");
 
               if (src_file != NULL)
                 {
-                  char expected_test_path[FILENAME_MAX] = { 0 };
+                  char expected_test_path[256 + 128 + 1] = { 0 };
                   char test_name[LENGTH_FUNCTION_NAME] = { 0 };
                   (void)strncpy (test_name, entry->d_name, (uint32_t)(extension_position - entry->d_name));
                   test_name[extension_position - entry->d_name] = '\0';
 
                   (void)strncat (test_name, LIBRARY_EXTENSION_TEST, sizeof (test_name) - strlen (test_name) - 1U);
-                  (void)snprintf (expected_test_path, FILENAME_MAX, "%s/%s", g_path_test_directory, test_name);
+                  (void)snprintf (expected_test_path, 256 + 128 + 1, "%s/%s", g_path_test_directory, test_name);
 
-                  g_declarations_update_definitions (src_file, path_buffer, expected_test_path);
+                  g_decl_update_definitions (src_file, path_buffer, expected_test_path);
                   (void)fclose (src_file);
                 }
               else
@@ -1392,7 +1392,7 @@ load_definitions (void)
  *
  * This function attempts to open and process each file in the test directory
  * whose name ends with LIBRARY_EXTENSION_TEST. For each valid test file, it calls
- * the g_declarations_update_tests function to update the test declarations.
+ * the g_decl_update_tests function to update the test declarations.
  *
  * @return true if all test files were successfully processed; false otherwise.
  *
@@ -1423,13 +1423,13 @@ load_tests (void)
           if (extension_position != NULL)
             {
               /* Attempt to open test file */
-              char path_buffer[FILENAME_MAX] = { 0 };
+              char path_buffer[(256 * 2) + 1] = { 0 };
               (void)snprintf (path_buffer, sizeof (path_buffer), "%s/%s", g_path_test_directory, entry->d_name);
               test_file = fopen (path_buffer, "r");
 
               if (test_file != NULL)
                 {
-                  result = g_tests_update_data (test_file, path_buffer) && g_declarations_update_tests (test_file, path_buffer);
+                  result = g_tests_update_data (test_file, path_buffer) && g_decl_update_tests (test_file, path_buffer);
 
                   (void)fclose (test_file);
                 }
