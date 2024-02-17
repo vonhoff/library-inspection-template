@@ -1312,8 +1312,15 @@ load_prototypes (void)
               continue;
             }
 
+          /* Skip leading spaces */
+          uint32_t offset = 0;
+          while (isspace (line_buffer[offset]) != 0)
+            {
+              ++offset;
+            }
+
           /* Check if the line is part of a function declaration */
-          if (line_get_prototype (line_buffer, declaration_buffer, &in_multi_line))
+          if (line_get_prototype (&line_buffer[offset], declaration_buffer, &in_multi_line))
             {
               result = g_decl_append (declaration_buffer, line_number);
             }
